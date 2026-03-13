@@ -11,7 +11,6 @@ class ServiceTest extends TestCase
         // 1. Arrange (Préparation)
         $service = new Service("Apache", 80, false);
 
-
         // 2. Act (Action) & 3. Assert (Vérification)
         // Vérifions que le service est éteint par défaut
         $this->assertFalse($service->estDemarre());
