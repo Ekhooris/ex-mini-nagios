@@ -58,6 +58,24 @@ class Serveur extends EquipementReseau
             }
         }
 
+        if (empty($this->maintenance)) {
+            echo  $html .="<strong>Pas en maitenance</strong>";
+        } else {
+            $html .= "<em>🚧</em>";
+
+        }
+
         return $html;
+    }
+
+    private bool $maintenance = false ;
+
+    function enMaintenance(): bool {
+        return $this->maintenance ;
+    }
+
+    function activerMaintenance(): void {
+        $this->maintenance = true;
+
     }
 }
