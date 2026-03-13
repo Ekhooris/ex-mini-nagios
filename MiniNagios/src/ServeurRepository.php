@@ -11,6 +11,16 @@ class ServeurRepository
         $this->pdo = $pdo;
     }
 
+    public function listerTous(): array{
+
+        $sql = "SELECT * FROM serveurs ORDER BY date_creation DESC";
+        $stmt = $this->pdo->prepare();
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    }
     /**
      * Sauvegarde un objet Serveur dans la base de données
      */
