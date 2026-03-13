@@ -22,4 +22,3 @@ class ServeurTest extends TestCase
         $this->assertStringContainsString("🚧", $srv->afficherStatut());
     }
 }
-assert
