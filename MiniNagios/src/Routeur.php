@@ -24,4 +24,5 @@ class Routeur extends EquipementReseau
     {
         return parent::afficherStatut() . " | Ports : $this->nbPorts";
     }
+
 }

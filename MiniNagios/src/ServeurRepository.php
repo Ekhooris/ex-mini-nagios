@@ -18,6 +18,7 @@ class ServeurRepository
 
         $stmt->execute();
 
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     }
@@ -38,4 +39,5 @@ class ServeurRepository
             'os'       => $serveur->getOs()
         ]);
     }
+
 }
