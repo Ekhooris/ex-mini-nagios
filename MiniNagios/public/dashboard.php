@@ -3,6 +3,8 @@ require '../vendor/autoload.php';
 
 use App\ServeurRepository ;
 use App\Database;
+use App\Securite ;
+Securite::verifierConnexion();
 $monPDO = \App\Database::getConnection() ;
 $monRepository = new ServeurRepository($monPDO) ;
 $monTableauServeurs = $monRepository->listerTous() ;
