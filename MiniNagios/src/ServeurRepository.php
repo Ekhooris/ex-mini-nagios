@@ -18,7 +18,7 @@ class ServeurRepository
     public function sauvegarder(Serveur $serveur): void
     {
         // 1. Préparation de la requête (CYBERSÉCURITÉ : Les "?" empêchent l'injection SQL)
-        $sql = "INSERT INTO serveurs (hostname, ip, os) VALUES (:hostname, :ip, :os)";
+        $sql = "INSERT INTO serveurs (hostname, ip, os, root_password_hybride) VALUES (:hostname, :ip, :os, :mdp)";
         $stmt = $this->pdo->prepare($sql);
 
         // 2. Exécution en remplaçant les "trous" par les vraies valeurs de l'objet
@@ -26,7 +26,8 @@ class ServeurRepository
         $stmt->execute([
             'hostname' => $serveur->getHostname(),
             'ip'       => $serveur->getIp(),
-            'os'       => $serveur->getOs()
+            'os'       => $serveur->getOs(),
+            'mdp'      => $serveur->recupereMotDePasseRoot()
         ]);
     }
 

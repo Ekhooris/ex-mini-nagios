@@ -1,41 +1,82 @@
 <?php
-require '../vendor/autoload.php';
 
+require "../vendor/autoload.php" ;
 use App\Database ;
-
-$emailSaisie = $_POST["email"];
-$mdpSaisie = $_POST["password"];
-
-if (isset($_POST['email']) && isset($_POST['password'])) {
-    session_start();
-    $pdo = Database::getConnection();
-    $stmt = $pdo->prepare("SELECT * FROM administrateurs WHERE email = :email");
-    $stmt->execute(['email' => $_POST['email']]);
-    $montableau = $stmt->fetchAll();
-    // On vérifie qu'il existe une ligne dans $montableau
-    //print_r($montableau);
-    //exit ;
-
-        if (password_verify($_POST['password'], $montableau[0]['password_hash'])&&($emailSaisie == $montableau[0]['email'])) {
-            $_SESSION['admin_id'] = $user['id'];
-            header("Location: dashboard.php?success=1");
-        } else {
-            header("Location: login.php?error=1");
-        }}
-        // Manque validation EMAIL & mot depasse
+session_start();
 
 
+// Vérifier que le formulaire est bien soumis
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // Si oui alors c'est que le email existe
-    // On met cette première ligne dans un tableau, par exemple $user
-    // On vérifie que le password est OK avec password_verify
-    // le $user['id] vient de la base de données
-    //$_SESSION['admin_id'] = $user['id'];
-    //header("Location: dashboard.php?success=1");
+    // Vérifier que les champs existent
+    if (!empty($_POST['email']) && !empty($_POST['password'])) {
 
-//}
+        $email = trim($_POST['email']);
+        $password = $_POST['password'];
 
-//else {
-  //  header("Location: login.php?error=1");
+        try {
+            // Connexion à la base de données (à adapter)
+            $pdo = Database::getConnection() ;
 
-//}
+            // Rechercher l'utilisateur
+            $stmt = $pdo->prepare("SELECT id, email, password_hash FROM administrateurs WHERE email = :email");
+            $stmt->execute(['email' => $email]);
+
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // Vérifier l'utilisateur
+            if ($user && password_verify($password, $user['password_hash'])) {
+
+                // Connexion réussie
+                $_SESSION['email'] = $user['email'];
+                $_SESSION['admin_id'] = $user['id'] ;
+                /*print_r($_SESSION);
+                exit ;*/
+
+                header('Location: dashboard.php');
+                exit;
+
+            } else {
+                // Mauvais identifiants
+                $_SESSION['error'] = "Email ou mot de passe incorrect.";
+                header('Location: login.php?erreur=1');
+                exit;
+            }
+
+        } catch (PDOException $e) {
+            die("Erreur : " . $e->getMessage());
+        }
+
+
+
+    } else {
+        // Champs manquants
+        $_SESSION['error'] = "Veuillez remplir tous les champs.";
+        header('Location: ../login.php');
+        exit;
+    }
+
+    password_verify();
+    session_start(); $_SESSION['admin_id'] = $user['id'];
+
+} else {
+    // Accès direct interdit
+    header('Location: ../login.php');
+    exit;
+}
+session_start();
+$_SESSION['admin_id'] = $user['id'];
+
+;
+// Vérifier que le formulaire est bien envoyé
+if ($SERVER['REQUEST_METHOD'] !== 'POST') {
+    header("Location: login.php");
+    exit;
+}
+
+else {
+    // Échec
+    header("Location: login.php?erreur=1");
+    exit;
+}
+
