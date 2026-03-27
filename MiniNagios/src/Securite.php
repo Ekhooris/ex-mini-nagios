@@ -1,15 +1,19 @@
 <?php
-require '../vendor/autoload.php';
-use App\Database;
+
+namespace App\Securite;
+
 class Securite
 {
     public static function verifierConnexion(): void
     {
+        session_start();
 
-        if (){}
-        else{header("Location: login.php");
+        if (!isset($_SESSION['admin_id']))
+        {
+            header("Location: login.php");
             exit();
-            }
+        }
+
     }
 }
 
